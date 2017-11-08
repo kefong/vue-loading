@@ -9,6 +9,5 @@ Loading.install = function(Vue, options){
     for (var property in options) {
 		Loading.opt[property] = options[property];
     }
-	console.log(111);
 }
 export default Loading;
