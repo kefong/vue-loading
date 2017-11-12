@@ -6,8 +6,12 @@ var Loading = {
         body: null,
         type: 'line',    //line, circle
     },
-    show: function(width){
-        Loading.bus.$emit('loadingBarShow', typeof(width) === 'number'?width:10);
+    show: function(loaded, total){
+        var width = 0;
+        loaded = typeof(loaded) === 'number'?loaded:0;
+        total = typeof(total) === 'number'?total:0;
+        width = (loaded == 0 || total == 0)?0:loaded / total * 100;
+        Loading.bus.$emit('loadingBarShow', width);
     },
     hide: function(){
         Loading.bus.$emit('loadingBarHide');
@@ -20,6 +24,6 @@ Loading.install = function(Vue, options){
     /*for (var property in options) {
 		Loading.opt[property] = options[property];
     }*/
-    Vue.prototype.$loading = Loading;
+    window.$loading = Vue.prototype.$loading = Loading;
 }
 export default Loading;

@@ -1,5 +1,5 @@
 <template>
-    <div class="vue-loading-bar" :style="{'width':width + '%'}" v-show="enabled"></div>
+    <div class="vue-loading-bar" :style="{'width':width + '%', 'opacity': opacity}" v-show="enabled"></div>
 </template>
 <script>
 export default {
@@ -7,22 +7,36 @@ export default {
     data: function(){
         return {
             width: 10,
-            enabled: false
+            enabled: false,
+            opacity:0
         }
     },
     created: function(){
         var that = this;
         this.$loading.bus.$on('loadingBarShow', function(width){
-            that.enabled = true;
-            that.width = typeof(width) == 'number'? width : 10;
+            that.show(width);
         });
         this.$loading.bus.$on('loadingBarHide', function(){
-            that.enabled = false;
+            that.hide();
         });
     },
     methods: {
-        updateWidth: function(width){
-            this.width = width;
+        show: function(width){
+            var that = this;
+
+            this.enabled = true;
+            this.opacity = 1;
+            this.width = typeof(width) == 'number'? width : 10;
+            this.width = this.width < 30? 30:this.width;
+            if(this.width == 100){
+                setTimeout(function(){			
+                    that.hide();
+                }, 800);
+            }
+        },
+        hide: function(){
+            this.enabled = false;
+            this.opacity = 0;
         }
     }
 }
